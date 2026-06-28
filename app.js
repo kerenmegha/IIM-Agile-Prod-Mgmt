@@ -16,12 +16,18 @@ const nextMonthBtn = document.getElementById("next-month");
 const todayBtn = document.getElementById("today-btn");
 const clearDateBtn = document.getElementById("clear-date-btn");
 const selectedDateLabel = document.getElementById("selected-date-label");
+const voiceBtn = document.getElementById("voice-btn");
+const voiceStatus = document.getElementById("voice-status");
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 let tasks = loadTasks();
 let currentFilter = "all";
 let selectedDate = null;
 let calendarMonth = new Date();
 calendarMonth.setDate(1);
+let recognition = null;
+let isListening = false;
 
 function loadTasks() {
   try {
@@ -303,4 +309,80 @@ filterButtons.forEach((btn) => {
 });
 
 dateInput.value = toDateKey(new Date());
+initVoiceInput();
 render();
+
+function showVoiceStatus(message, isError = false) {
+  voiceStatus.textContent = message;
+  voiceStatus.hidden = false;
+  voiceStatus.classList.toggle("error", isError);
+  voiceStatus.classList.remove("hidden");
+}
+
+function hideVoiceStatus() {
+  voiceStatus.hidden = true;
+  voiceStatus.classList.add("hidden");
+  voiceStatus.classList.remove("error");
+}
+
+function initVoiceInput() {
+  if (!SpeechRecognition) {
+    voiceBtn.disabled = true;
+    voiceBtn.title = "Voice input is not supported in this browser";
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = navigator.language || "en-US";
+
+  recognition.onstart = () => {
+    isListening = true;
+    voiceBtn.classList.add("listening");
+    voiceBtn.setAttribute("aria-label", "Stop voice input");
+    showVoiceStatus("Listening… speak your task.");
+  };
+
+  recognition.onresult = (event) => {
+    let transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      transcript += event.results[i][0].transcript;
+    }
+    input.value = transcript.trim();
+  };
+
+  recognition.onend = () => {
+    isListening = false;
+    voiceBtn.classList.remove("listening");
+    voiceBtn.setAttribute("aria-label", "Start voice input");
+    hideVoiceStatus();
+    input.focus();
+  };
+
+  recognition.onerror = (event) => {
+    isListening = false;
+    voiceBtn.classList.remove("listening");
+    voiceBtn.setAttribute("aria-label", "Start voice input");
+
+    if (event.error === "not-allowed") {
+      showVoiceStatus("Microphone access denied. Allow mic access and try again.", true);
+    } else if (event.error !== "aborted") {
+      showVoiceStatus("Voice input failed. Try again.", true);
+    }
+  };
+
+  voiceBtn.addEventListener("click", () => {
+    if (isListening) {
+      recognition.stop();
+      return;
+    }
+
+    try {
+      input.focus();
+      recognition.start();
+    } catch {
+      showVoiceStatus("Could not start voice input. Try again.", true);
+    }
+  });
+}

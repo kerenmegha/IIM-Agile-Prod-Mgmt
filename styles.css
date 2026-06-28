@@ -243,6 +243,77 @@ body {
 .task-form input[type="text"] {
   flex: 1;
   min-width: 0;
+  padding-right: 3rem;
+}
+
+.task-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-input-wrap input {
+  width: 100%;
+}
+
+.voice-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.voice-btn:hover:not(:disabled) {
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.voice-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.voice-btn.listening {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  animation: pulse-mic 1.2s ease-in-out infinite;
+}
+
+.voice-btn__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: currentColor;
+}
+
+@keyframes pulse-mic {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.08); }
+}
+
+.voice-status {
+  margin: -0.75rem 0 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.voice-status.error {
+  color: var(--danger);
+}
+
+.voice-status.hidden {
+  display: none;
 }
 
 .task-form input {
@@ -270,7 +341,7 @@ body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
-.task-form button {
+.task-form button.submit-btn {
   padding: 0.875rem 1.25rem;
   background: var(--accent);
   border: none;
@@ -283,7 +354,7 @@ body {
   transition: background 0.15s;
 }
 
-.task-form button:hover {
+.task-form button.submit-btn:hover {
   background: var(--accent-hover);
 }
 

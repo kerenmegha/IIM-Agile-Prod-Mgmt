@@ -10,6 +10,7 @@ A simple one-page task manager built with HTML, CSS, and JavaScript.
 - Click a date to filter tasks due that day
 - Overdue tasks are highlighted in red
 - Filter by all, active, or completed
+- Voice input via microphone (Chrome and Edge)
 - Clear all completed tasks at once
 - Tasks persist in your browser via localStorage
 
