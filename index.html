@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__text">
+        <h1>Task Manager</h1>
+        <p class="subtitle">Stay organized, one task at a time.</p>
+      </div>
+      <div class="stats" aria-live="polite">
+        <span id="active-count">0 active</span>
+        <span class="stats__divider">·</span>
+        <span id="done-count">0 done</span>
+      </div>
+    </header>
+
+    <form id="task-form" class="task-form" autocomplete="off">
+      <input
+        id="task-input"
+        type="text"
+        placeholder="What needs to be done?"
+        aria-label="New task"
+        maxlength="200"
+        required
+      >
+      <button type="submit">Add task</button>
+    </form>
+
+    <div class="toolbar">
+      <div class="filters" role="tablist" aria-label="Filter tasks">
+        <button type="button" class="filter active" data-filter="all">All</button>
+        <button type="button" class="filter" data-filter="active">Active</button>
+        <button type="button" class="filter" data-filter="done">Done</button>
+      </div>
+      <button type="button" id="clear-done" class="clear-done" hidden>Clear completed</button>
+    </div>
+
+    <ul id="task-list" class="task-list" aria-label="Tasks"></ul>
+
+    <p id="empty-state" class="empty-state">No tasks yet. Add one above to get started.</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
